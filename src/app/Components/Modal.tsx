@@ -36,10 +36,12 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
   });
 
   // Field change handler
-  const handleFieldChange = (field: string) => {
+  const handleFieldChange = (field: keyof FormData) => {
     return (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
     ) => {
+      console.log(field);
+      console.log(e);
       setFormData((prevState) => {
         return {
           ...prevState,
@@ -88,8 +90,8 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
       newErrors.gender = "Please select a gender";
       isValid = false;
     }
-    if (formData.age === 0 && formData.age <= 101) {
-      newErrors.age = "Please Enter correct Age";
+    if (formData.age <= 0 || formData.age > 100) {
+      newErrors.age = "Please enter a valid age between 1 and 100";
       isValid = false;
     }
 

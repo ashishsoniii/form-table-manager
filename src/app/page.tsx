@@ -74,7 +74,7 @@ export default function Home() {
       (item) => !selectedRowKeys.includes(item.id)
     ); // Remove selected items
     setFormData(newData);
-    setSelectedRowKeys([]); // Clear selected rows after deletion
+    setSelectedRowKeys([]); // Clear selected rows 
   };
 
   //
