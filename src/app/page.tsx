@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./page.module.css";
-import { Table } from "antd";
+import { Button, Col, Row, Table } from "antd";
 import Modals from "./Components/Modal";
 import { FormData } from "./types/types";
 import { useState } from "react";
@@ -27,7 +27,22 @@ export default function Home() {
     },
   ]);
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // to store selected row keys
+
   const columns = [
+    {
+      title: "Select",
+      dataIndex: "select",
+      key: "select",
+      render: (text: any, record: any) => (
+        <input
+          type="checkbox"
+          checked={selectedRowKeys.includes(record.id)}
+          onChange={() => handleRowSelection(record.id)}
+        />
+      ),
+    },
+
     {
       title: "Name",
       dataIndex: "name",
@@ -61,18 +76,64 @@ export default function Home() {
     setFormData((prev) => [...prev, newData]);
   };
 
-  return (
-    <div className={styles.page}>
-      {/* modal for form */}
-      <Modals onSubmit={handleAddData} />
+  const handleDelete = () => {
+    const newData = formData.filter(
+      (item) => !selectedRowKeys.includes(item.id)
+    ); // Remove selected items
+    setFormData(newData);
+    setSelectedRowKeys([]); // Clear selected rows after deletion
+  };
 
-      {/* Antd table */}
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        pagination={false}
-        rowKey="id"
-      />
+  const handleRowSelection = (id: string) => {
+    const newSelectedKeys = selectedRowKeys.includes(id)
+      ? selectedRowKeys.filter((key) => key !== id) // Deselect
+      : [...selectedRowKeys, id]; // Select
+
+    setSelectedRowKeys(newSelectedKeys);
+  };
+
+  return (
+    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+      <Row justify="space-between" style={{ marginBottom: "20px" }}>
+        <Col>
+          <Modals onSubmit={handleAddData} />
+        </Col>
+        <Col>
+          <Button
+            type="primary"
+            danger
+            onClick={handleDelete}
+            disabled={selectedRowKeys.length === 0}
+          >
+            Delete Selected
+          </Button>
+        </Col>
+      </Row>
+
+      {/* <Button
+        color="danger"
+        variant="outlined"
+        onClick={handleDelete}
+        disabled={selectedRowKeys.length === 0}
+      >
+        Delete Selected
+      </Button> */}
+
+      <div
+        style={{
+          padding: "10px",
+          backgroundColor: "#fff",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          pagination={false}
+          rowKey="id"
+        />
+      </div>
     </div>
   );
 }
