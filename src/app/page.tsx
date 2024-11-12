@@ -15,6 +15,7 @@ export default function Home() {
       email: "ashishsoni2002@gmail.com",
       gender: "Male",
       message: "This is my Quite small msg",
+      age: 22,
     },
     {
       id: uuidv4(),
@@ -23,6 +24,7 @@ export default function Home() {
       email: "ashishsoni2002@gmail.com",
       gender: "Male",
       message: "This is my Quite small msg",
+      age: 22,
     },
   ]);
 
@@ -43,6 +45,11 @@ export default function Home() {
       title: "Email",
       dataIndex: "email",
       key: "email",
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
     },
     {
       title: "Gender",

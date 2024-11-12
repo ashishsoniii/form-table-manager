@@ -20,6 +20,7 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
     phone: "",
     message: "",
     gender: "",
+    age: 0,
   });
 
   const [errors, setErrors] = useState({
@@ -28,6 +29,7 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
     phone: "",
     message: "",
     gender: "",
+    age: "",
   });
 
   // Field change handler
@@ -56,6 +58,7 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
       phone: "",
       message: "",
       gender: "",
+      age:""
     };
 
     let isValid = true;
@@ -86,6 +89,10 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
       newErrors.gender = "Please select a gender";
       isValid = false;
     }
+    if (formData.age === 0 && formData.age <= 101) {
+      newErrors.age = "Please Enter correct Age";
+      isValid = false;
+    }
 
     setErrors(newErrors);
     return isValid;
@@ -108,8 +115,9 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
       phone: "",
       message: "",
       gender: "",
+      age: 22,
     });
-    setErrors({ name: "", email: "", phone: "", message: "", gender: "" });
+    setErrors({ name: "", email: "", phone: "", message: "", gender: "", age: "" });
   };
 
   return (
@@ -155,6 +163,17 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
             <Input
               value={formData.phone}
               onChange={handleFieldChange("phone")}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Age"
+            validateStatus={errors.age ? "error" : ""}
+            help={errors.age}
+          >
+            <Input
+              value={formData.age}
+              onChange={handleFieldChange("age")}
             />
           </Form.Item>
 
