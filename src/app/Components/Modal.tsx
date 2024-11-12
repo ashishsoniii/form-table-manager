@@ -5,11 +5,14 @@ import { Modal, Button, Form, Input, Select } from "antd";
 import { FormData } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
-interface FormModalProps {
-  onSubmit: (data: FormData) => void;
-}
+// Better way is this pass like this as Provides type safety, auto-completion, and better tooling support in TypeScript and and
+// interface FormModalProps {
+//   onSubmit: (data: FormData) => void;
+// }
 
-const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
+const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
+  onSubmit,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
 
   // Unified form state
@@ -33,17 +36,13 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
   });
 
   // Field change handler
-  const handleFieldChange = (field: keyof FormData) => {
+  const handleFieldChange = (field: string) => {
     return (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
     ) => {
-      // We update the formData state by copying the previous state and only modifying the specific field.
       setFormData((prevState) => {
         return {
-          // Copy all the existing formData
           ...prevState,
-
-          // Update the specific field (field) with the new value
           [field]: typeof e === "string" ? e : e.target.value,
         };
       });
@@ -58,7 +57,7 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
       phone: "",
       message: "",
       gender: "",
-      age:""
+      age: "",
     };
 
     let isValid = true;
@@ -117,7 +116,14 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
       gender: "",
       age: 22,
     });
-    setErrors({ name: "", email: "", phone: "", message: "", gender: "", age: "" });
+    setErrors({
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+      gender: "",
+      age: "",
+    });
   };
 
   return (
@@ -171,10 +177,7 @@ const FormModal: React.FC<FormModalProps> = ({ onSubmit }) => {
             validateStatus={errors.age ? "error" : ""}
             help={errors.age}
           >
-            <Input
-              value={formData.age}
-              onChange={handleFieldChange("age")}
-            />
+            <Input value={formData.age} onChange={handleFieldChange("age")} />
           </Form.Item>
 
           <Form.Item
