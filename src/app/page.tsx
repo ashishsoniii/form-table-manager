@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "./page.module.css";
 import { Button, Col, Row, Table } from "antd";
 import Modals from "./Components/Modal";
 import { FormData } from "./types/types";
@@ -10,7 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 export default function Home() {
   const [formData, setFormData] = useState<FormData[]>([
     {
-      id: uuidv4(), // Automatically generating ID
+      id: uuidv4(),
       name: "Ashish Soni",
       phone: "9660688940",
       email: "ashishsoni2002@gmail.com",
@@ -18,7 +17,7 @@ export default function Home() {
       message: "This is my Quite small msg",
     },
     {
-      id: uuidv4(), // Automatically generating ID
+      id: uuidv4(),
       name: "Ashish Soni 2",
       phone: "9660688940",
       email: "ashishsoni2002@gmail.com",
@@ -27,22 +26,9 @@ export default function Home() {
     },
   ]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // to store selected row keys
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const columns = [
-    {
-      title: "Select",
-      dataIndex: "select",
-      key: "select",
-      render: (text: any, record: any) => (
-        <input
-          type="checkbox"
-          checked={selectedRowKeys.includes(record.id)}
-          onChange={() => handleRowSelection(record.id)}
-        />
-      ),
-    },
-
     {
       title: "Name",
       dataIndex: "name",
@@ -84,12 +70,12 @@ export default function Home() {
     setSelectedRowKeys([]); // Clear selected rows after deletion
   };
 
-  const handleRowSelection = (id: string) => {
-    const newSelectedKeys = selectedRowKeys.includes(id)
-      ? selectedRowKeys.filter((key) => key !== id) // Deselect
-      : [...selectedRowKeys, id]; // Select
-
-    setSelectedRowKeys(newSelectedKeys);
+  //
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys: React.Key[]) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
   };
 
   return (
@@ -110,15 +96,6 @@ export default function Home() {
         </Col>
       </Row>
 
-      {/* <Button
-        color="danger"
-        variant="outlined"
-        onClick={handleDelete}
-        disabled={selectedRowKeys.length === 0}
-      >
-        Delete Selected
-      </Button> */}
-
       <div
         style={{
           padding: "10px",
@@ -132,6 +109,8 @@ export default function Home() {
           dataSource={dataSource}
           pagination={false}
           rowKey="id"
+          rowSelection={rowSelection} // this Ant Design's rowSelection (takes React.key[])
+          bordered
         />
       </div>
     </div>
