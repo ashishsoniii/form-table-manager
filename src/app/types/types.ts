@@ -14,6 +14,7 @@ export type FormData = {
   mentorName?: string; // Optional as on position
   hobbies: string[];
   isActive: boolean;
+  secretMessage:String
 };
 
 /*

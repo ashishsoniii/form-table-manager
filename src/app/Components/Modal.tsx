@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Modal, Button, Form, Input, Select, InputNumber, Checkbox } from "antd";
+import {
+  Modal,
+  Button,
+  Form,
+  Input,
+  Select,
+  InputNumber,
+  Checkbox,
+} from "antd";
 import { FormData } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -69,15 +77,33 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "Please enter your name" }]}
+            rules={[
+              { required: true, message: "Please enter your name" },
+              { min: 5, message: "Name must be of at least 6 characters" },
+            ]}
+            hasFeedback
           >
             <Input />
+          </Form.Item>
+
+          <Form.Item
+            name="secretMessage"
+            label="Secret Message"
+            rules={[
+              {
+                required: true,
+                message: "Please input Secret Message!",
+              },
+            ]}
+          >
+            <Input.Password />
           </Form.Item>
 
           <Form.Item
             label="Position"
             name="position"
             rules={[{ required: true, message: "Please select your Position" }]}
+            hasFeedback
           >
             <Select
               placeholder="Select Position"
@@ -107,6 +133,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
               { required: true, message: "Please enter your email" },
               { type: "email", message: "Please enter a valid email" },
             ]}
+            hasFeedback
           >
             <Input />
           </Form.Item>
@@ -121,6 +148,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
                 message: "Please enter a valid phone number",
               },
             ]}
+            hasFeedback
           >
             <Input />
           </Form.Item>
@@ -132,13 +160,14 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
               {
                 required: true,
                 type: "number",
-                min: 1,
+                min: 18,
                 max: 100,
-                message: "Please enter a valid age between 1 and 100",
+                message: "Please enter a valid age between 18 and 100",
               },
             ]}
+            hasFeedback
           >
-            <InputNumber type="number" />
+            <InputNumber style={{ width: "100%" }} type="number" />
           </Form.Item>
 
           <Form.Item
@@ -175,7 +204,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
             label="Hobbies"
             name="hobbies"
             rules={[
-              { type: "array", message: "Please select at least one hobby" },
+              {required:true, type: "array", message: "Please select at least one hobby" },
             ]}
           >
             <Select
