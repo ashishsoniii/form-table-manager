@@ -16,15 +16,18 @@ export default function Home() {
       gender: "Male",
       message: "This is my Quite small msg",
       age: 22,
+      position: "Intern",
+      mentorName: "Santosh"
     },
     {
       id: uuidv4(),
-      name: "Ashish Soni 2",
-      phone: "9660688940",
-      email: "ashishsoni2002@gmail.com",
+      name: "Santosh",
+      phone: "987654321",
+      email: "santosh@gmail.com",
       gender: "Male",
       message: "This is my Quite small msg",
       age: 22,
+      position:"Engineer"
     },
   ]);
 
@@ -55,6 +58,16 @@ export default function Home() {
       title: "Gender",
       dataIndex: "gender",
       key: "gender",
+    },
+    {
+      title: "Position",
+      dataIndex: "position",
+      key: "position",
+    },
+    {
+      title: "Mentor Name",
+      dataIndex: "mentorName",
+      key: "mentorName",
     },
     {
       title: "Message",

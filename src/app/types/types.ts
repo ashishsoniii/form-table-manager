@@ -6,7 +6,10 @@ export type FormData = {
   gender: string;
   message: string;
   age: number;
+  position: string;
+  mentorName?: string; // Optional as on position
 };
+
 
 
 

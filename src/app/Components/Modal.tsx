@@ -26,17 +26,16 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
     const validateForm = async () => {
       try {
         await form.validateFields({ validateOnly: true });
-        setSubmittable(true); 
+        setSubmittable(true);
       } catch {
-        setSubmittable(false); 
+        setSubmittable(false);
       }
     };
-
     validateForm();
   }, [values, form]);
 
-  // Validation and submission handler
-  const handleSubmit = async () => {
+   // Validation and submission handler
+   const handleSubmit = async () => {
     try {
       const formData = await form.validateFields();
       formData.id = uuidv4(); // it adds unique id to formData
@@ -64,7 +63,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
           setSubmittable(false); // Reset submit button state when modal is closed
         }}
         okText="Submit"
-        okButtonProps={{ disabled: !submittable }} // Disable submit based on submittable state
+        okButtonProps={{ disabled: !submittable }}
       >
         <Form form={form} layout="vertical" initialValues={{ age: 22 }}>
           <Form.Item
@@ -74,6 +73,35 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
           >
             <Input />
           </Form.Item>
+
+          <Form.Item
+            label="Position"
+            name="position"
+            rules={[
+              { required: true, message: "Please select your Position" },
+            ]}
+          >
+            <Select
+              placeholder="Select Position"
+              options={[
+                { value: "Intern", label: "Intern" },
+                { value: "Engineer", label: "Engineer" },
+              ]}
+            />
+          </Form.Item>
+
+          {/* Conditionally render the "Company" field if "Employed" is selected */}
+          {values?.position === "Intern" && (
+            <Form.Item
+              label="Mentor Name"
+              name="mentorName"
+              rules={[
+                { required: true, message: "Please enter your Mentor's name" },
+              ]}
+            >
+              <Input placeholder="Enter your Mentor name" />
+            </Form.Item>
+          )}
 
           <Form.Item
             label="Email"
