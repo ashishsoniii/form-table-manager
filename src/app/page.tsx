@@ -17,7 +17,9 @@ export default function Home() {
       message: "This is my Quite small msg",
       age: 22,
       position: "Intern",
-      mentorName: "Santosh"
+      mentorName: "Santosh",
+      hobbies: ["Reading", "Gaming"],
+      isActive: true,
     },
     {
       id: uuidv4(),
@@ -27,7 +29,9 @@ export default function Home() {
       gender: "Male",
       message: "This is my Quite small msg",
       age: 22,
-      position:"Engineer"
+      position: "Engineer",
+      hobbies: ["Reading", "Gaming"],
+      isActive: false,
     },
   ]);
 
@@ -74,6 +78,18 @@ export default function Home() {
       dataIndex: "message",
       key: "message",
     },
+    {
+      title: "Is Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive: boolean) => (isActive ? "Yes" : "No"),
+    },
+    {
+      title: "Hobbies",
+      dataIndex: "hobbies",
+      key: "hobbies",
+      render: (hobbies: string[] = []) => hobbies.join(", "),
+    },
   ];
 
   const dataSource = [...formData];
@@ -87,7 +103,7 @@ export default function Home() {
       (item) => !selectedRowKeys.includes(item.id)
     ); // Remove selected items
     setFormData(newData);
-    setSelectedRowKeys([]); // Clear selected rows 
+    setSelectedRowKeys([]); // Clear selected rows
   };
 
   //

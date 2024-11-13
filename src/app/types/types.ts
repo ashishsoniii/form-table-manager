@@ -1,19 +1,20 @@
+export type Gender = "Male" | "Female" | "Other";
+
+export type Position = "Intern" | "Engineer";
+
 export type FormData = {
   id: string;
   name: string;
   phone: string;
   email: string;
-  gender: string;
+  gender: Gender;
   message: string;
   age: number;
-  position: string;
+  position: Position;
   mentorName?: string; // Optional as on position
+  hobbies: string[];
+  isActive: boolean;
 };
-
-
-
-
-
 
 /*
 Notes 

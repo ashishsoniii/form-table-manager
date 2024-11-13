@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Modal, Button, Form, Input, Select, InputNumber } from "antd";
+import { Modal, Button, Form, Input, Select, InputNumber, Checkbox } from "antd";
 import { FormData } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,8 +34,8 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
     validateForm();
   }, [values, form]);
 
-   // Validation and submission handler
-   const handleSubmit = async () => {
+  // Validation and submission handler
+  const handleSubmit = async () => {
     try {
       const formData = await form.validateFields();
       formData.id = uuidv4(); // it adds unique id to formData
@@ -77,9 +77,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
           <Form.Item
             label="Position"
             name="position"
-            rules={[
-              { required: true, message: "Please select your Position" },
-            ]}
+            rules={[{ required: true, message: "Please select your Position" }]}
           >
             <Select
               placeholder="Select Position"
@@ -90,7 +88,6 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
             />
           </Form.Item>
 
-          {/* Conditionally render the "Company" field if "Employed" is selected */}
           {values?.position === "Intern" && (
             <Form.Item
               label="Mentor Name"
@@ -171,6 +168,31 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
                 { value: "Other", label: "Other" },
               ]}
             />
+          </Form.Item>
+
+          {/* hobbies  */}
+          <Form.Item
+            label="Hobbies"
+            name="hobbies"
+            rules={[
+              { type: "array", message: "Please select at least one hobby" },
+            ]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select your hobbies"
+              options={[
+                { value: "Reading", label: "Reading" },
+                { value: "Traveling", label: "Traveling" },
+                { value: "Gaming", label: "Gaming" },
+                { value: "Cooking", label: "Cooking" },
+              ]}
+            />
+          </Form.Item>
+
+          {/* checkbox for isActive | true/false */}
+          <Form.Item name="isActive" valuePropName="checked">
+            <Checkbox>Is Active</Checkbox>
           </Form.Item>
         </Form>
       </Modal>
