@@ -33,7 +33,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
   useEffect(() => {
     const validateForm = async () => {
       try {
-        await form.validateFields({ validateOnly: true });
+        await form.validateFields({ validateOnly: true }); // validateOnly -> validate fields without submit!
         setSubmittable(true);
       } catch {
         setSubmittable(false);
@@ -114,7 +114,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
             />
           </Form.Item>
 
-          {values?.position === "Intern" && (
+          {values.position === "Intern" && (
             <Form.Item
               label="Mentor Name"
               name="mentorName"
@@ -204,7 +204,11 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
             label="Hobbies"
             name="hobbies"
             rules={[
-              {required:true, type: "array", message: "Please select at least one hobby" },
+              {
+                required: true,
+                type: "array",
+                message: "Please select at least one hobby",
+              },
             ]}
           >
             <Select

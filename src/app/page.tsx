@@ -20,7 +20,7 @@ export default function Home() {
       mentorName: "Santosh",
       hobbies: ["Reading", "Gaming"],
       isActive: true,
-      secretMessage: "hi"
+      secretMessage: "hi",
     },
     {
       id: uuidv4(),
@@ -33,7 +33,7 @@ export default function Home() {
       position: "Engineer",
       hobbies: ["Reading", "Gaming"],
       isActive: false,
-      secretMessage:"Hello"
+      secretMessage: "Hello",
     },
   ]);
 
