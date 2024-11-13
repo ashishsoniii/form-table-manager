@@ -114,7 +114,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
             />
           </Form.Item>
 
-          {values.position === "Intern" && (
+          {values?.position === "Intern" && (
             <Form.Item
               label="Mentor Name"
               name="mentorName"
