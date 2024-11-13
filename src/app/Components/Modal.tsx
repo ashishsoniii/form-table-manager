@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Modal, Button, Form, Input, Select } from "antd";
+import React, { useEffect } from "react";
+import { Modal, Button, Form, Input, Select, InputNumber } from "antd";
 import { FormData } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,8 +14,26 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
   onSubmit,
 }) => {
   const [isVisible, setIsVisible] = React.useState<boolean>(false);
+  const [submittable, setSubmittable] = React.useState<boolean>(false); // State to control submit button
 
   const [form] = Form.useForm();
+
+  // useWatch  -> monitors any changes in the form & triggers the validation check every time form field updates , if not useWatch then we have to add event listener
+  const values = Form.useWatch([], form);
+
+  // check form validity whenever form values change
+  useEffect(() => {
+    const validateForm = async () => {
+      try {
+        await form.validateFields({ validateOnly: true });
+        setSubmittable(true); 
+      } catch {
+        setSubmittable(false); 
+      }
+    };
+
+    validateForm();
+  }, [values, form]);
 
   // Validation and submission handler
   const handleSubmit = async () => {
@@ -25,6 +43,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
       onSubmit(formData);
       setIsVisible(false);
       form.resetFields(); // resets form
+      setSubmittable(false); // Reset submit button state
     } catch (error) {
       console.error("Validation failed:", error);
     }
@@ -42,8 +61,10 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
         onCancel={() => {
           setIsVisible(false);
           form.resetFields(); // resets form on close
+          setSubmittable(false); // Reset submit button state when modal is closed
         }}
         okText="Submit"
+        okButtonProps={{ disabled: !submittable }} // Disable submit based on submittable state
       >
         <Form form={form} layout="vertical" initialValues={{ age: 22 }}>
           <Form.Item
@@ -92,7 +113,7 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
               },
             ]}
           >
-            <Input type="number" />
+            <InputNumber type="number" />
           </Form.Item>
 
           <Form.Item
