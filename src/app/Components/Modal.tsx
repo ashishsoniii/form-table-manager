@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Modal, Button, Form, Input, Select } from "antd";
 import { FormData } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
-// Better way is this pass like this as Provides type safety, auto-completion, and better tooling support in TypeScript and and
+// Better way is this pass props like this as this Provides type safety, auto-completion, and better tooling support in TypeScript and readability
 // interface FormModalProps {
 //   onSubmit: (data: FormData) => void;
 // }
@@ -13,119 +13,21 @@ import { v4 as uuidv4 } from "uuid";
 const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
   onSubmit,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = React.useState<boolean>(false);
 
-  // Unified form state
-  const [formData, setFormData] = useState<FormData>({
-    id: uuidv4(),
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-    gender: "",
-    age: 0,
-  });
+  const [form] = Form.useForm();
 
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-    gender: "",
-    age: "",
-  });
-
-  // Field change handler
-  const handleFieldChange = (field: keyof FormData) => {
-    return (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
-    ) => {
-      console.log(field);
-      console.log(e);
-      setFormData((prevState) => {
-        return {
-          ...prevState,
-          [field]: typeof e === "string" ? e : e.target.value,
-        };
-      });
-    };
-  };
-
-  // Validation function
-  const validateFields = () => {
-    const newErrors = {
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-      gender: "",
-      age: "",
-    };
-
-    let isValid = true;
-
-    if (!formData.name) {
-      newErrors.name = "Please enter your name";
-      isValid = false;
-    }
-    if (!formData.email) {
-      newErrors.email = "Please enter your email";
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
-      isValid = false;
-    }
-    if (!formData.phone) {
-      newErrors.phone = "Please enter your phone number";
-      isValid = false;
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number";
-      isValid = false;
-    }
-    if (formData.message && formData.message.length < 10) {
-      newErrors.message = "Length of Message should be at least 10 characters";
-      isValid = false;
-    }
-    if (!formData.gender) {
-      newErrors.gender = "Please select a gender";
-      isValid = false;
-    }
-    if (formData.age <= 0 || formData.age > 100) {
-      newErrors.age = "Please enter a valid age between 1 and 100";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = () => {
-    if (validateFields()) {
+  // Validation and submission handler
+  const handleSubmit = async () => {
+    try {
+      const formData = await form.validateFields();
+      formData.id = uuidv4(); // it adds unique id to formData
       onSubmit(formData);
       setIsVisible(false);
-      resetForm();
+      form.resetFields(); // resets form
+    } catch (error) {
+      console.error("Validation failed:", error);
     }
-  };
-
-  // Reset form fields and errors
-  const resetForm = () => {
-    setFormData({
-      id: uuidv4(),
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-      gender: "",
-      age: 22,
-    });
-    setErrors({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-      gender: "",
-      age: "",
-    });
   };
 
   return (
@@ -139,71 +41,81 @@ const FormModal: React.FC<{ onSubmit: (data: FormData) => void }> = ({
         onOk={handleSubmit}
         onCancel={() => {
           setIsVisible(false);
-          resetForm();
+          form.resetFields(); // resets form on close
         }}
         okText="Submit"
       >
-        <Form layout="vertical">
+        <Form form={form} layout="vertical" initialValues={{ age: 22 }}>
           <Form.Item
             label="Name"
-            validateStatus={errors.name ? "error" : ""}
-            help={errors.name}
+            name="name"
+            rules={[{ required: true, message: "Please enter your name" }]}
           >
-            <Input value={formData.name} onChange={handleFieldChange("name")} />
+            <Input />
           </Form.Item>
 
           <Form.Item
             label="Email"
-            validateStatus={errors.email ? "error" : ""}
-            help={errors.email}
+            name="email"
+            rules={[
+              { required: true, message: "Please enter your email" },
+              { type: "email", message: "Please enter a valid email" },
+            ]}
           >
-            <Input
-              value={formData.email}
-              onChange={handleFieldChange("email")}
-            />
+            <Input />
           </Form.Item>
 
           <Form.Item
             label="Phone"
-            validateStatus={errors.phone ? "error" : ""}
-            help={errors.phone}
+            name="phone"
+            rules={[
+              { required: true, message: "Please enter your phone number" },
+              {
+                pattern: /^\d{10}$/,
+                message: "Please enter a valid phone number",
+              },
+            ]}
           >
-            <Input
-              value={formData.phone}
-              onChange={handleFieldChange("phone")}
-            />
+            <Input />
           </Form.Item>
 
           <Form.Item
             label="Age"
-            validateStatus={errors.age ? "error" : ""}
-            help={errors.age}
+            name="age"
+            rules={[
+              {
+                required: true,
+                type: "number",
+                min: 1,
+                max: 100,
+                message: "Please enter a valid age between 1 and 100",
+              },
+            ]}
           >
-            <Input value={formData.age} onChange={handleFieldChange("age")} />
+            <Input type="number" />
           </Form.Item>
 
           <Form.Item
             label="Message"
-            validateStatus={errors.message ? "error" : ""}
-            help={errors.message}
+            name="message"
+            rules={[
+              {
+                min: 10,
+                message: "Length of Message should be at least 10 characters",
+              },
+            ]}
           >
-            <Input.TextArea
-              rows={4}
-              value={formData.message}
-              onChange={handleFieldChange("message")}
-            />
+            <Input.TextArea rows={4} />
           </Form.Item>
 
           <Form.Item
             label="Gender"
-            validateStatus={errors.gender ? "error" : ""}
-            help={errors.gender}
+            name="gender"
+            rules={[{ required: true, message: "Please select a gender" }]}
           >
             <Select
               showSearch
               placeholder="Select a gender"
-              value={formData.gender}
-              onChange={handleFieldChange("gender")}
               options={[
                 { value: "Male", label: "Male" },
                 { value: "Female", label: "Female" },
